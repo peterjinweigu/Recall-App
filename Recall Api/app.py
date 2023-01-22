@@ -22,7 +22,7 @@ def insert():
                          (a, b))
         conn.commit()
         conn.close()
-        return jsonify({True : "Complete"})
+        return jsonify({1 : True})
 
 @app.route('/grab/', methods=['POST'])
 def grab():

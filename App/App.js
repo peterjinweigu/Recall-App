@@ -1,7 +1,17 @@
 import { Camera, CameraType } from 'expo-camera';
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Button, Modal, ImageBackground, StyleSheet, Text, TouchableOpacity, View, StatusBar, TextInput } from 'react-native';
 import { Octicons, AntDesign  } from '@expo/vector-icons'; 
+
+const Status = (props) => {
+  return (
+    <View style={styles.statusContainer}>
+      <View style={styles.status}>
+        <Text style={styles.text}>{props.message}</Text>
+      </View>
+    </View>
+  )
+}
 
 export default function App() {
   const [type, setType] = useState(CameraType.back);
@@ -11,9 +21,17 @@ export default function App() {
   const [inputVisible, setInputVisible] = useState(false)
   const [name, onChangeName] = useState()
   const [base64, setBase64] = useState()
+  const [message, setMessage] = useState("Perry was added")
+  const [statusVisible, setStatusVisible] = useState(false)
 
   const camera = useRef(null)
 
+  useEffect(() => {
+    setTimeout(() => {
+      setStatusVisible(false)
+    }, 3000)
+  }, [message]) 
+  
   function toggleCameraType() {
     setType(current => (current === CameraType.back ? CameraType.front : CameraType.back));
   }
@@ -40,8 +58,15 @@ export default function App() {
       mode: 'cors',
       body: JSON.stringify({1 : name, 2 : base64})
     }).then((response) => response.json())
-    .then((data) => console.log(data));
-     }
+    .then((data) => {
+      if (data['1']) {
+        console.log("cringe")
+        setStatusVisible(true)
+        setMessage(name + " was added")
+      }
+    });
+    setInputVisible(false)
+  }
 
   const findPerson = () => {
     fetch(`http://128.189.132.103:5000/grab/`, {
@@ -49,7 +74,17 @@ export default function App() {
       mode: 'cors',
       body: JSON.stringify({1 : base64})
     }).then((response) => response.json())
-    .then((data) => console.log(data));
+    .then((data) => {
+      console.log(data['1'])
+      if (data['1']) {
+        console.log("cringe")
+        setStatusVisible(true)
+        setMessage(data['2'] + " was found")
+      } else{
+        setStatusVisible(true)
+        setMessage("person was not found")
+      }
+    });
   }
 
   const takePicture = async () => {
@@ -63,6 +98,7 @@ export default function App() {
   }
 
   const retake = () => {
+    setStatusVisible(false)
     setPhotoVisible(false)
   }
 
@@ -105,6 +141,7 @@ export default function App() {
             source={{ uri: photoPreview }}
             style={{ ...styles.container, justifyContent: 'flex-end' }}
           >
+            {statusVisible ? <Status message={message}/> : null}
             <View style={styles.buttonContainer}>
               <View style={styles.buttonBox}>
                 <TouchableOpacity
@@ -177,6 +214,24 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '30%',
     flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  statusContainer: {
+    width: "100%",
+    height: "20%",
+    top: '5%',
+    position: 'absolute',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  status: {
+    width: '80%',
+    height: '50%',
+    backgroundColor: 'black',
+    borderRadius: 15,
+    borderWidth: 3,
+    borderColor: 'white',
     justifyContent: 'center',
     alignItems: 'center'
   },
