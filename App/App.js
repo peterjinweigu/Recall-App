@@ -10,6 +10,7 @@ export default function App() {
   const [photoPreview, setPhotoPreview] = useState()
   const [inputVisible, setInputVisible] = useState(false)
   const [name, onChangeName] = useState()
+  const [base64, setBase64] = useState()
 
   const camera = useRef(null)
 
@@ -32,11 +33,24 @@ export default function App() {
     );
   }
 
+  const addPerson = () => {
+    console.log(name)
+    fetch(`http://128.189.132.103:5000/insert/`, {
+      method: 'POST',
+      mode: 'cors',
+      body: JSON.stringify({1 : name, 2 : "hello"})
+    })
+        .then((response) => {
+          console.log(response)
+        })
+     }
+
   const takePicture = async () => {
     if (camera) {
       const options = {base64: true}
       const data = await camera.current.takePictureAsync(options)
       setPhotoPreview(data.uri)
+      setBase64(data.base64)
       setPhotoVisible(true)
     }
   }
@@ -73,7 +87,7 @@ export default function App() {
                 />
                 <TouchableOpacity
                   style={styles.plusButton}
-                  onPress={{}}
+                  onPress={addPerson}
                 >
                   <AntDesign name="plus" size={50} color="white" />
                 </TouchableOpacity>
