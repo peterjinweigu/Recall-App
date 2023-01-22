@@ -38,12 +38,19 @@ export default function App() {
     fetch(`http://128.189.132.103:5000/insert/`, {
       method: 'POST',
       mode: 'cors',
-      body: JSON.stringify({1 : name, 2 : "hello"})
-    })
-        .then((response) => {
-          console.log(response)
-        })
+      body: JSON.stringify({1 : name, 2 : base64})
+    }).then((response) => response.json())
+    .then((data) => console.log(data));
      }
+
+  const findPerson = () => {
+    fetch(`http://128.189.132.103:5000/grab/`, {
+      method: 'POST',
+      mode: 'cors',
+      body: JSON.stringify({1 : base64})
+    }).then((response) => response.json())
+    .then((data) => console.log(data));
+  }
 
   const takePicture = async () => {
     if (camera) {
@@ -101,7 +108,7 @@ export default function App() {
             <View style={styles.buttonContainer}>
               <View style={styles.buttonBox}>
                 <TouchableOpacity
-                  onPress={{}}
+                  onPress={findPerson}
                   style={styles.button}
                 >
                   <AntDesign name="search1" size={45} color="white" />

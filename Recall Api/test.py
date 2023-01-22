@@ -5,7 +5,7 @@ import base64
 
 cur = sqlite3.connect("database.db")
 
-print(cur.execute("SELECT name, img FROM labels").fetchall())
+print(cur.execute("SELECT name FROM labels").fetchall())
 
 # cur.execute('INSERT INTO labels VALUES (?, ?)',
 #                         ("Peter", base64.encodebytes(open("4.jpg", "rb").read())))

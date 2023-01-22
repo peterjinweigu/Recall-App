@@ -15,21 +15,23 @@ def get_db_connection():
 @app.route('/insert/', methods=['POST'])
 def insert():
     if request.method == 'POST':
-        print(json.loads(request.data)['1'])
-        # conn = get_db_connection()
-        # conn.execute('INSERT INTO labels VALUES (?, ?)',
-        #                 (a, a))
-        # conn.commit()
-        # conn.close()
+        a = json.loads(request.data)['1']
+        b = json.loads(request.data)['2']
+        conn = get_db_connection()
+        conn.execute('INSERT INTO labels VALUES (?, ?)',
+                         (a, b))
+        conn.commit()
+        conn.close()
         return jsonify({True : "Complete"})
 
-@app.route('/grab/', methods=['GET'])
+@app.route('/grab/', methods=['POST'])
 def grab():
-     if request.method == 'GET':
+     if request.method == 'POST':
+        a = json.loads(request.data)['1']
         ret = face_detection.main(a)
         if type(ret) == str:
-            return jsonify({True : ret})
+            return jsonify({1 : True, 2 : ret})
         else:
-            return jsonify({False : ""})
+            return jsonify({1 : False})
 
 
