@@ -82,7 +82,7 @@ export default function App() {
         setMessage(data['2'] + " was found")
       } else{
         setStatusVisible(true)
-        setMessage("person was not found")
+        setMessage("Person was not found")
       }
     });
   }

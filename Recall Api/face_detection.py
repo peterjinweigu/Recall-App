@@ -76,6 +76,7 @@ def main(data):
         if error < minn:
             minn = error
             cur = name
+        print(name, error)
     print(minn, name)
     if minn <= 50:
        return name
